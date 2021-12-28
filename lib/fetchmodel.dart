@@ -29,7 +29,7 @@ class Post {
 Future<List<Post>> fetchPost() async {
   try{
     final response = await http
-        .post(Uri.parse('http://192.168.10.16/OldHome1/api/oldhome/searchbyusername?UserName=Zeeshan'));
+        .post(Uri.parse('http://192.168.26.115/OldHome1/api/oldhome/searchbyusername?UserName=Zeeshan'));
     print(jsonDecode(response.body));
     //final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
     //return parsed.map<Post>((json) => Post.fromMap(json)).toList();
@@ -37,7 +37,7 @@ Future<List<Post>> fetchPost() async {
     print(e);
   }
   final response = await http
-      .get(Uri.parse('http://192.168.10.16/OldHome1/api/oldhome/searchbyusername?UserName=Zeeshan'));
+      .get(Uri.parse('http://192.168.10.5/OldHome1/api/oldhome/searchbyusername?UserName=Zeeshan'));
 
   final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
   return parsed.map<Post>((json) => Post.fromMap(json)).toList();

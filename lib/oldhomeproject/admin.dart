@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:old/adddetail.dart';
-import 'package:old/addservices.dart';
-import 'package:old/multiimagepicker.dart';
-import 'package:old/setpolicy.dart';
-import 'package:old/viewpolicy.dart';
-import 'package:old/viewserices.dart';
-
-import 'adddetails.dart';
-
+import 'package:old/oldhomeproject/packagesname.dart';
+import 'package:old/silver.dart';
+import 'package:old/oldhomeproject/viewsericesname.dart';
+import 'adddetail.dart';
 
 class Admin extends StatefulWidget {
-  const Admin({Key? key}) : super(key: key);
-
+  final int id;
+  final int idp;
+  final int ids;
+  Admin({Key? key, required this.id, required this.idp, required this.ids})
+      : super(key: key);
   @override
   _AdminState createState() => _AdminState();
 }
 
 class _AdminState extends State<Admin> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin'),),
+      appBar: AppBar(
+        title: const Text('Admin'),
+      ),
       resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -29,7 +28,7 @@ class _AdminState extends State<Admin> {
           child: Column(
             children: <Widget>[
               const SizedBox(
-                height: 70.0,
+                height: 40.0,
               ),
               Container(
                   height: 100,
@@ -38,7 +37,7 @@ class _AdminState extends State<Admin> {
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                          MaterialStateProperty.all<Color>(Colors.blue),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -50,13 +49,14 @@ class _AdminState extends State<Admin> {
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                     onPressed: () {
-
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Details()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Detail(id: widget.id)));
                     },
                   )),
               const SizedBox(
-                height: 50.0,
+                height: 40.0,
               ),
               Container(
                   height: 100,
@@ -65,7 +65,7 @@ class _AdminState extends State<Admin> {
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                          MaterialStateProperty.all<Color>(Colors.blue),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -73,16 +73,20 @@ class _AdminState extends State<Admin> {
                       ),
                     ),
                     child: const Text(
-                      'Add Services',
+                      'Services',
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Multiimage() ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ServicesName(
+                                    id: widget.ids,
+                                  )));
                     },
                   )),
               const SizedBox(
-                height: 50.0,
+                height: 40.0,
               ),
               Container(
                   height: 100,
@@ -91,7 +95,7 @@ class _AdminState extends State<Admin> {
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                          MaterialStateProperty.all<Color>(Colors.blue),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -99,12 +103,16 @@ class _AdminState extends State<Admin> {
                       ),
                     ),
                     child: const Text(
-                      'View Services',
+                      'Packages',
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage() ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => View(
+                                    id: widget.idp,
+                                  )));
                     },
                   )),
               const SizedBox(
@@ -117,60 +125,7 @@ class _AdminState extends State<Admin> {
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Set Packages',
-                    style: TextStyle(fontSize: 30, color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Policy()));
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 50.0,
-              ),
-              Container(
-                  height: 100,
-                  width: 400,
-                  padding: const EdgeInsets.all(10),
-                  child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'View Packages',
-                      style: TextStyle(fontSize: 30, color: Colors.white),
-                    ),
-                    onPressed: () {
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const View()));
-                    },
-                  )),
-              const SizedBox(
-                height: 50.0,
-              ),
-              Container(
-                height: 100,
-                width: 400,
-                padding: const EdgeInsets.all(10),
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.blue),
+                        MaterialStateProperty.all<Color>(Colors.blue),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
@@ -183,7 +138,7 @@ class _AdminState extends State<Admin> {
                   ),
                   onPressed: () {
                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Multiimage()));
+                        MaterialPageRoute(builder: (context) => Lala()));
                   },
                 ),
               ),

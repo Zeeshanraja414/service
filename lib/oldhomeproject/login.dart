@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:old/admin.dart';
+import 'package:old/oldhomeproject/admin.dart';
 import "package:flutter/material.dart";
-import 'package:old/register.dart';
-import 'package:http/http.dart'as http;
-import 'package:old/user.dart';
+import 'package:old/oldhomeproject/register.dart';
+import 'package:http/http.dart' as http;
+import 'package:old/oldhomeproject/user.dart';
+import 'package:old/url.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,67 +17,76 @@ class _State extends State<LoginPage> {
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   TextEditingController UserTypeController = TextEditingController();
+  TextEditingController IdController = TextEditingController();
+
   late String UserName, Password;
   late bool error, sending, success;
   late String msg;
-  String url ="http://192.168.150.115/OldHome1/api/oldhome/login";
+  String url = "http://${IpAdress.ip}/OldHome1/api/oldhome/login";
   late String Username;
-
   @override
-
-  void initState(){
+  void initState() {
     error = false;
     sending = false;
     success = false;
     super.initState();
   }
-  Future<void> login() async{
-    var res=await http.post(Uri.parse(url),body: {
-      'UserName':UserNameController.text,
-      'Password':PasswordController.text,
-      'UserType':UserTypeController.text,
+
+  Future<void> login() async {
+    var res = await http.post(Uri.parse(url), body: {
+      'Id': IdController.text,
+      'UserName': UserNameController.text,
+      'Password': PasswordController.text,
+      'UserType': UserTypeController.text,
     });
-    if (res.statusCode==200){
+    if (res.statusCode == 200) {
       print(res.body);
       var data = json.decode(res.body);
-      if (data['UserType'] == 'oldhome'){
+      int id = data['Id'];
+      String FullName = data['FullName'];
+      print(id);
+      if (data['UserType'] == 'oldhome') {
         setState(() {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const Admin()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Admin(
+                        id: id,
+                        idp: id,
+                        ids: id,
+                      )));
         });
       }
-      if (data['UserType'] == 'user'){
+      if (data['UserType'] == 'user') {
         setState(() {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const User()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => User()));
         });
       }
-      if(data["error"]){
+      if (data["error"]) {
         setState(() {
           sending = false;
           error = true;
           msg = data["message"];
         });
-      }
-      else{
-        UserNameController.text='';
-        PasswordController.text='';
-
+      } else {
+        UserNameController.text = '';
+        PasswordController.text = '';
 
         setState(() {
-          sending=false;
-          success=true;
+          sending = false;
+          success = true;
         });
       }
-    }
-    else{
+    } else {
       setState(() {
-        error=true;
-        msg="Error during sending data";
-        sending=false;
+        error = true;
+        msg = "Error during sending data";
+        sending = false;
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,15 +140,13 @@ class _State extends State<LoginPage> {
                   child: TextButton(
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                      shape:
-                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
                     ),
-
                     child: const Text(
                       'Login',
                       style: TextStyle(fontSize: 30, color: Colors.white),
@@ -145,9 +154,8 @@ class _State extends State<LoginPage> {
                     onPressed: () {
                       login();
                       //Navigator.push(context,
-                          //MaterialPageRoute(builder: (context) => hhcAdmin()));
+                      //MaterialPageRoute(builder: (context) => hhcAdmin()));
                     },
-
                   )),
               Row(
                 children: <Widget>[
@@ -159,8 +167,10 @@ class _State extends State<LoginPage> {
                       style: TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Signup()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Signup()));
                     },
                   )
                 ],

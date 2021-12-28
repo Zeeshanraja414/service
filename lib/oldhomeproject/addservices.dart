@@ -1,12 +1,15 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
-//import 'package:old/config.dart';
+import 'package:old/url.dart';
+import 'package:http/http.dart' as http;
 
 class Multiimage extends StatefulWidget {
-  const Multiimage({Key? key}) : super(key: key);
+  int id;
+  Multiimage({Key? key, required this.id}) : super(key: key);
 
   @override
   _MultiimageState createState() => _MultiimageState();
@@ -15,6 +18,7 @@ class Multiimage extends StatefulWidget {
 class _MultiimageState extends State<Multiimage> {
   List<Asset> images = [];
   Dio dio = Dio();
+
   Widget buildGridView() {
     return GridView.count(
       crossAxisCount: 3,
@@ -28,7 +32,45 @@ class _MultiimageState extends State<Multiimage> {
       }),
     );
   }
+
   TextEditingController ServiceNameController = TextEditingController();
+  //Object? _value = 'user';
+  late bool error, sending, success;
+  late String msg;
+  String url = "http://${IpAdress.ip}/OldHome1/api/oldhome/addservice";
+
+  Future<void> sendName() async {
+    var res = await http.post(Uri.parse(url), body: {
+      'ServiceName': ServiceNameController.text,
+      'Id': widget.id.toString(),
+      //'name': ,
+    });
+    if (res.statusCode == 200) {
+      print(res.body);
+      var data = json.decode(res.body);
+      if (data["error"]) {
+        setState(() {
+          sending = false;
+          error = true;
+          msg = data["message"];
+        });
+      } else {
+        ServiceNameController.text = '';
+        widget.id = '' as int;
+        setState(() {
+          sending = false;
+          success = true;
+        });
+      }
+    } else {
+      setState(() {
+        error = true;
+        msg = "Error during sending data";
+        sending = false;
+      });
+    }
+  }
+
   Future<void> loadAssets() async {
     List<Asset> resultList = [];
     try {
@@ -57,13 +99,14 @@ class _MultiimageState extends State<Multiimage> {
       images = resultList;
     });
   }
-  static const BASE_URL="http://192.168.43.96/OldHome1/api/oldhome/uploadfiles";
-  _saveImage() async{
-    if(images != null) {
+
+  String BASE_URL = "http://${IpAdress.ip}/OldHome1/api/oldhome/addservice";
+
+  _saveImage() async {
+    if (images != null) {
       for (var i = 0; i < images.length; i++) {
         ByteData byteData = await images[i].getByteData();
         List<int> imageData = byteData.buffer.asInt8List();
-
         MultipartFile multipartFile = MultipartFile.fromBytes(
           imageData,
           filename: images[i].name,
@@ -71,12 +114,12 @@ class _MultiimageState extends State<Multiimage> {
         );
         FormData formData = FormData.fromMap({
           "name": multipartFile,
-          "ServiceName":ServiceNameController.text,
+          "ServiceName": ServiceNameController.text,
+          'Id': widget.id.toString(),
         });
         var response = await dio.post(BASE_URL, data: formData);
-        if(response.statusCode==200){
+        if (response.statusCode == 200) {
           print(response.data);
-
         }
       }
     }
@@ -84,29 +127,40 @@ class _MultiimageState extends State<Multiimage> {
 
   @override
   void initState() {
+    error = false;
+    sending = false;
+    success = false;
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Upload Image'),),
+      appBar: AppBar(
+        title: const Text('Upload Image'),
+      ),
       body: Column(
         children: [
           TextFormField(
             controller: ServiceNameController,
             decoration: InputDecoration(
               labelText: 'Service Name',
-              border:OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
           ),
-          ElevatedButton(onPressed:loadAssets,
+          ElevatedButton(
+            onPressed: loadAssets,
             child: const Text('Pick Image'),
           ),
           Expanded(
             child: buildGridView(),
           ),
-          ElevatedButton(onPressed:_saveImage,
+          ElevatedButton(
+            onPressed: () async {
+              await _saveImage();
+              //sendName();
+            },
             child: const Text('Save'),
           )
         ],
