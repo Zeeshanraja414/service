@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:old/oldhomeproject/login.dart';
 import 'package:http/http.dart' as http;
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);

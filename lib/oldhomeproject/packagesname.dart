@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/packagesdetail.dart';
 import 'dart:convert';
-import 'package:old/addpackages.dart';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/addpackages.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -78,6 +78,9 @@ class _ViewState extends State<View> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                  physics: ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     return Container(

@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/packagesdetail.dart';
-import 'package:old/oldhomeproject/packagesname.dart';
 import 'package:old/oldhomeproject/packagetype%20user%20side.dart';
-import 'package:old/oldhomeproject/viewpackagenameuser.dart';
 import 'package:old/oldhomeproject/viewservicenameuser.dart';
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 class Search {
   Search({
@@ -49,8 +46,14 @@ class Search {
 
 class OldHomeDetails extends StatefulWidget {
   final String oldhome;
-
-  OldHomeDetails({Key? key, required this.oldhome}) : super(key: key);
+  String FullName;
+  int uid;
+  OldHomeDetails(
+      {Key? key,
+      required this.oldhome,
+      required this.FullName,
+      required this.uid})
+      : super(key: key);
   @override
   _OldHomeDetailsState createState() => _OldHomeDetailsState();
 }
@@ -83,6 +86,7 @@ class _OldHomeDetailsState extends State<OldHomeDetails> {
   }
 
   var id;
+  var OldhomeNAme;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,6 +113,7 @@ class _OldHomeDetailsState extends State<OldHomeDetails> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             id = snapshot.data![index].Id;
+                            OldhomeNAme = snapshot.data![index].FullName;
                             return Column(
                               children: [
                                 Text(
@@ -352,6 +357,9 @@ class _OldHomeDetailsState extends State<OldHomeDetails> {
                           MaterialPageRoute(
                               builder: (context) => PackageType(
                                     id: id,
+                                    FullName: widget.FullName,
+                                    uid: widget.uid,
+                                    OldhomeName: OldhomeNAme,
                                   )));
                     },
                     child: Text(

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/packagesdetail.dart';
 import 'dart:convert';
-import 'package:old/addpackages.dart';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -37,9 +36,11 @@ class Post {
 
 class ViewPackageName extends StatefulWidget {
   int idpu;
+  String FullName;
   ViewPackageName({
     Key? key,
     required this.idpu,
+    required this.FullName,
   }) : super(key: key);
 
   @override
@@ -81,6 +82,9 @@ class _ViewPackageNameState extends State<ViewPackageName> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                  physics: ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     return Container(

@@ -1,51 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
 
 class Post {
   Post({
-    required this.BookingType,
-    required this.PackageName,
-    required this.PackageDetails,
-    required this.Duration,
-    required this.TotalPrice,
-    required this.StayDuration,
+    required this.FullName,
+    required this.ContactNo,
+    required this.Address,
+    required this.City,
+    required this.UserName,
+    required this.Email,
   });
 
-  var BookingType;
-  var PackageName;
-  var PackageDetails;
-  var Duration;
-  var TotalPrice;
-  var StayDuration;
+  var UserName;
+  var FullName;
+  var ContactNo;
+  var Address;
+  var City;
+  var Email;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
-        BookingType: json["BookingType"],
-        PackageName: json["PackageName"],
-        PackageDetails: json["PackageDetails"],
-        Duration: json["Duration"],
-        TotalPrice: json["TotalPrice"],
-        StayDuration: json["StayDuration"],
+        UserName: json["UserName"],
+        FullName: json["FullName"],
+        ContactNo: json["ContactNo"],
+        Address: json["Address"],
+        City: json["City"],
+        Email: json["Email"],
       );
 }
 
-class Packagedetail extends StatefulWidget {
-  final String name;
-  int id;
-  Packagedetail({Key? key, required this.name, required this.id})
-      : super(key: key);
+class Detail extends StatefulWidget {
+  const Detail({Key? key}) : super(key: key);
+
   @override
-  _PackagedetailState createState() => _PackagedetailState();
+  _DetailState createState() => _DetailState();
 }
 
-class _PackagedetailState extends State<Packagedetail> {
+class _DetailState extends State<Detail> {
   Future<List<Post>> fetchPost() async {
-    final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetails?name=${widget.name}&Id=${widget.id}'));
+    final response = await http
+        .get(Uri.parse('http://192.168.10.4/OldHome1/api/oldhome/search'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -55,7 +52,9 @@ class _PackagedetailState extends State<Packagedetail> {
     }
   }
 
+  Object? _value = 'Male';
   late Future<List<Post>> futurePost;
+
   @override
   void initState() {
     super.initState();
@@ -67,29 +66,19 @@ class _PackagedetailState extends State<Packagedetail> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Package Details'),
+          title: Text('Details'),
         ),
         body: FutureBuilder<List<Post>>(
           future: futurePost,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
-                physics: ScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (_, index) {
                   return Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        Text(
-                          'Booking Type',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
                             height: 40,
@@ -100,7 +89,7 @@ class _PackagedetailState extends State<Packagedetail> {
                               color: Colors.black,
                             )),
                             child: Text(
-                              snapshot.data![index].BookingType.toString(),
+                              snapshot.data![index].FullName.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -108,13 +97,6 @@ class _PackagedetailState extends State<Packagedetail> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Package Name',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
                             height: 40,
@@ -125,7 +107,7 @@ class _PackagedetailState extends State<Packagedetail> {
                               color: Colors.black,
                             )),
                             child: Text(
-                              snapshot.data![index].PackageName.toString(),
+                              snapshot.data![index].ContactNo.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -133,13 +115,6 @@ class _PackagedetailState extends State<Packagedetail> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Total Price',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
                             height: 40,
@@ -150,7 +125,7 @@ class _PackagedetailState extends State<Packagedetail> {
                               color: Colors.black,
                             )),
                             child: Text(
-                              snapshot.data![index].TotalPrice.toString(),
+                              snapshot.data![index].Email.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -158,13 +133,6 @@ class _PackagedetailState extends State<Packagedetail> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Duration',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
                             height: 40,
@@ -175,7 +143,7 @@ class _PackagedetailState extends State<Packagedetail> {
                               color: Colors.black,
                             )),
                             child: Text(
-                              snapshot.data![index].Duration.toString(),
+                              snapshot.data![index].Address.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -183,13 +151,6 @@ class _PackagedetailState extends State<Packagedetail> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Stay Duration',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
                             height: 40,
@@ -200,7 +161,7 @@ class _PackagedetailState extends State<Packagedetail> {
                               color: Colors.black,
                             )),
                             child: Text(
-                              snapshot.data![index].StayDuration.toString(),
+                              snapshot.data![index].City.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -208,28 +169,86 @@ class _PackagedetailState extends State<Packagedetail> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Package Details',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         Card(
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            height: 40,
+                            width: 350,
+                            // padding: EdgeInsets.only(top: 12),
                             decoration: BoxDecoration(
                                 border: Border.all(
                               color: Colors.black,
                             )),
-                            child: Text(
-                              snapshot.data![index].PackageDetails.toString(),
-                              style: const TextStyle(
-                                fontSize: 18,
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: "Total Seats",
                               ),
                             ),
                           ),
                         ),
+                        SizedBox(height: 20),
+                        Card(
+                          child: Container(
+                            height: 40,
+                            width: 350,
+                            padding: EdgeInsets.only(top: 12),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                              color: Colors.black,
+                            )),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: "Vacant Seats",
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Radio(
+                                value: 'Male',
+                                activeColor: Colors.blue,
+                                groupValue: _value,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value = value;
+                                  });
+                                }),
+                            const Text(
+                              'Male',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 50,
+                            ),
+                            Radio(
+                              value: 'Female',
+                              activeColor: Colors.blue,
+                              groupValue: _value,
+                              onChanged: (value) {
+                                setState(() {
+                                  _value = value;
+                                });
+                              },
+                            ),
+                            const Text(
+                              'FeMale',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              "Save",
+                            ))
                       ],
                     ),
                   );

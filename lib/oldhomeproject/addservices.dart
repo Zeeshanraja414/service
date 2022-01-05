@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/url.dart';
 import 'package:http/http.dart' as http;
 
 class Multiimage extends StatefulWidget {
@@ -100,7 +100,7 @@ class _MultiimageState extends State<Multiimage> {
     });
   }
 
-  String BASE_URL = "http://${IpAdress.ip}/OldHome1/api/oldhome/addservice";
+  String BASE_URL = "http://${IpAdress.ip}/OldHome1/api/oldhome/addservices";
 
   _saveImage() async {
     if (images != null) {
@@ -115,7 +115,7 @@ class _MultiimageState extends State<Multiimage> {
         FormData formData = FormData.fromMap({
           "name": multipartFile,
           "ServiceName": ServiceNameController.text,
-          'Id': widget.id.toString(),
+          //'Id': widget.id.toString(),
         });
         var response = await dio.post(BASE_URL, data: formData);
         if (response.statusCode == 200) {

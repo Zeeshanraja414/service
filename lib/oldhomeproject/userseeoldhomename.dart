@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/Usersiteoldhomedetails.dart';
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 class Search {
   Search({
@@ -47,11 +47,16 @@ class OldHomeName extends StatefulWidget {
   final String Name;
   final String City;
   final String Gender;
+  String Fullname;
+  int uid;
+
   OldHomeName({
     Key? key,
     required this.Name,
     required this.City,
     required this.Gender,
+    required this.Fullname,
+    required this.uid,
   }) : super(key: key);
 
   @override
@@ -164,6 +169,7 @@ class _OldHomeNameState extends State<OldHomeName> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
+                          physics: ScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemCount: snapshot.data!.length,
@@ -181,6 +187,8 @@ class _OldHomeNameState extends State<OldHomeName> {
                                               builder: (context) =>
                                                   OldHomeDetails(
                                                     oldhome: name,
+                                                    FullName: widget.Fullname,
+                                                    uid: widget.uid,
                                                   )));
                                     },
                                     child: Text(

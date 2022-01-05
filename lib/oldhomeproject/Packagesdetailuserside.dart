@@ -1,51 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/url.dart';
+import 'package:intl/intl.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
 
 class Post {
-  Post({
-    required this.BookingType,
-    required this.PackageName,
-    required this.PackageDetails,
-    required this.Duration,
-    required this.TotalPrice,
-    required this.StayDuration,
-  });
-
+  Post(
+      {required this.Pid,
+      required this.BookingType,
+      required this.PackageName,
+      required this.PackageDetails,
+      required this.Duration,
+      required this.TotalPrice,
+      required this.StayDuration,
+      required this.OldhomeName});
+  var Pid;
   var BookingType;
   var PackageName;
   var PackageDetails;
   var Duration;
   var TotalPrice;
   var StayDuration;
+  var OldhomeName;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
+        Pid: json["Pid"],
         BookingType: json["BookingType"],
         PackageName: json["PackageName"],
         PackageDetails: json["PackageDetails"],
         Duration: json["Duration"],
         TotalPrice: json["TotalPrice"],
         StayDuration: json["StayDuration"],
+        OldhomeName: json["OldhomeName"],
       );
 }
 
 class PackagedetailUser extends StatefulWidget {
   final String name;
-  int id;
-  PackagedetailUser({Key? key, required this.name, required this.id})
+  int OHid;
+  String FullNAme;
+  int uid;
+  String OldhomeName;
+  PackagedetailUser(
+      {Key? key,
+      required this.name,
+      required this.OHid,
+      required this.FullNAme,
+      required this.uid,
+      required this.OldhomeName})
       : super(key: key);
   @override
   _PackagedetailUserState createState() => _PackagedetailUserState();
 }
 
 class _PackagedetailUserState extends State<PackagedetailUser> {
+  late bool error, sending, success;
+  late String msg;
+  var Pid;
+  var PackageName;
+  var b;
+  var date = DateTime.now();
+  String url = "http://${IpAdress.ip}/OldHome1/api/oldhome/Sendrequestpost";
+
+  Future<void> Request() async {
+    var res = await http.post(Uri.parse(url), body: {
+      'FullName': widget.FullNAme,
+      'PackageName': PackageName,
+      'Status': 'Pending',
+      'Id': widget.uid.toString(),
+      'Pid': Pid.toString(),
+      'OHId': widget.OHid.toString(),
+      'OldhomeName': widget.OldhomeName,
+      'BookingType': b,
+      'Date': date,
+    });
+    if (res.statusCode == 200) {
+      print(res.body);
+      var data = json.decode(res.body);
+      if (data["error"]) {
+        setState(() {
+          sending = false;
+          error = true;
+          msg = data["message"];
+        });
+      } else {
+        widget.FullNAme = '';
+        widget.uid = '' as int;
+        widget.OHid = '' as int;
+        PackageName = '';
+        Pid = '' as int;
+        widget.OldhomeName = '';
+        b = '';
+        date = '' as DateTime;
+
+        setState(() {
+          sending = false;
+          success = true;
+        });
+      }
+    } else {
+      setState(() {
+        error = true;
+        msg = "Error during sending data";
+        sending = false;
+      });
+    }
+  }
+
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetails?name=${widget.name}&Id=${widget.id}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetails?name=${widget.name}&Id=${widget.OHid}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -58,6 +125,9 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
   late Future<List<Post>> futurePost;
   @override
   void initState() {
+    error = false;
+    sending = false;
+    success = false;
     super.initState();
     futurePost = fetchPost();
   }
@@ -77,10 +147,14 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
+                      physics: ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
+                        Pid = snapshot.data![index].Pid;
+                        PackageName = snapshot.data![index].PackageName;
+                        b = snapshot.data![index].BookingType;
                         return Padding(
                           padding: EdgeInsets.all(10),
                           child: Column(
@@ -249,7 +323,9 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                 },
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Request();
+                },
                 child: Text('Send Request'),
               ),
             ],

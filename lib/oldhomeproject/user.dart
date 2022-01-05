@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/Usersiteoldhomedetails.dart';
 import 'package:old/oldhomeproject/userseeoldhomename.dart';
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 class Search {
   Search({
@@ -44,8 +44,30 @@ class Search {
       );
 }
 
+class View {
+  var Status;
+  var OldhomeName;
+  var PackageName;
+  var BookingType;
+  View({
+    required this.Status,
+    required this.OldhomeName,
+    required this.BookingType,
+    required this.PackageName,
+  });
+
+  factory View.fromMap(Map<String, dynamic> json) => View(
+        Status: json["Status"],
+        OldhomeName: json["OldhomeName"],
+        PackageName: json["PackageName"],
+        BookingType: json["BookingType"],
+      );
+}
+
 class User extends StatefulWidget {
-  User({Key? key}) : super(key: key);
+  String Fullname;
+  int uid;
+  User({Key? key, required this.Fullname, required this.uid}) : super(key: key);
 
   @override
   _UserState createState() => _UserState();
@@ -66,29 +88,166 @@ class _UserState extends State<User> {
     }
   }
 
+  Future<List<View>> ViewRequestuser() async {
+    final response = await http.get(Uri.parse(
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/Viewrequestuser?id=${widget.uid}'));
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return parsed.map<View>((json) => View.fromMap(json)).toList();
+    } else {
+      throw Exception('Failed');
+    }
+  }
+
   var FullName;
   var City;
   var Gender;
   late Future<List<Search>> futureSearch;
+  late Future<List<View>> futureuser;
   @override
   void initState() {
     futureSearch = searchOld();
+    futureuser = ViewRequestuser();
     super.initState();
   }
 
-  List<String> items = <String>[
-    'Islamabad',
-    'Rawalpindi',
-  ];
+  Future<void> refresh() async {
+    setState(() {
+      futureSearch = searchOld();
+      futureuser = ViewRequestuser();
+    });
+  }
+
+  List<String> items = <String>['Islamabad', 'Rawalpindi', 'Karachi'];
 
   var dropdownValue = 'Rawalpindi';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('View or Search Old Home'),
-          leading: BackButton(onPressed: () => Navigator.of(context).pop(true)),
+          //leading: BackButton(onPressed: () => Navigator.of(context).pop(true)),
+        ),
+        drawer: RefreshIndicator(
+          onRefresh: refresh,
+          child: Drawer(
+            child: FutureBuilder<List<View>>(
+                future: futureuser,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        physics: ScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, index) {
+                          return Container(
+                            margin: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.blue,
+                                  width: 4,
+                                )),
+                            child: Stack(
+                              children: <Widget>[
+                                Text(
+                                  'User FullName       :',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 150),
+                                  child: Text(
+                                    snapshot.data![index].OldhomeName,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 35, 0, 0),
+                                  child: Text(
+                                    'Selected Package :',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(150, 35, 0, 0),
+                                  child: Text(
+                                    snapshot.data![index].PackageName,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                                  child: Text(
+                                    'Booking Type         :',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(150, 70, 0, 0),
+                                  child: Text(
+                                    snapshot.data![index].BookingType,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 105, 0, 0),
+                                  child: Text(
+                                    'Status                      :',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(150, 105, 0, 0),
+                                  child: Text(
+                                    snapshot.data![index].Status,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('${snapshot.error}'));
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                }),
+          ),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -202,6 +361,8 @@ class _UserState extends State<User> {
                                   Name: FullName,
                                   City: City,
                                   Gender: Gender,
+                                  Fullname: widget.Fullname,
+                                  uid: widget.uid,
                                 )));
                   },
                   child: const Text('Search'),
@@ -220,6 +381,7 @@ class _UserState extends State<User> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return ListView.builder(
+                            physics: ScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
                             itemCount: snapshot.data!.length,
@@ -236,6 +398,8 @@ class _UserState extends State<User> {
                                                 builder: (context) =>
                                                     OldHomeDetails(
                                                       oldhome: ss,
+                                                      FullName: widget.Fullname,
+                                                      uid: widget.uid,
                                                     )));
                                       },
                                       child: Text(

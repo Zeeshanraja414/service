@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -69,6 +69,9 @@ class _DetailState extends State<Detail> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                physics: ScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (_, index) {
                   return ListTile(

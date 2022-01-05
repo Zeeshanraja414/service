@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/packagesdetail.dart';
 import 'package:old/oldhomeproject/searchpackagenameusersite.dart';
 import 'dart:convert';
-import 'package:old/url.dart';
-
+import 'package:old/oldhomeproject/url.dart';
 import 'Packagesdetailuserside.dart';
 
 List<Post> postFromJson(String str) =>
@@ -13,6 +11,7 @@ List<Post> postFromJson(String str) =>
 
 class Post {
   Post({
+    required this.Pid,
     required this.BookingType,
     required this.PackageName,
     required this.PackageDetails,
@@ -20,7 +19,7 @@ class Post {
     required this.TotalPrice,
     required this.StayDuration,
   });
-
+  var Pid;
   var BookingType;
   var PackageName;
   var PackageDetails;
@@ -29,6 +28,7 @@ class Post {
   var StayDuration;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
+        Pid: json["Pid"],
         BookingType: json["BookingType"],
         PackageName: json["PackageName"],
         PackageDetails: json["PackageDetails"],
@@ -40,7 +40,16 @@ class Post {
 
 class PackageType extends StatefulWidget {
   int id;
-  PackageType({Key? key, required this.id}) : super(key: key);
+  String FullName;
+  int uid;
+  String OldhomeName;
+  PackageType(
+      {Key? key,
+      required this.id,
+      required this.FullName,
+      required this.uid,
+      required this.OldhomeName})
+      : super(key: key);
 
   @override
   _PackageTypeState createState() => _PackageTypeState();
@@ -118,7 +127,6 @@ class _PackageTypeState extends State<PackageType> {
           ),
           ElevatedButton(
             onPressed: () {
-              var type;
               setState(() {
                 Navigator.push(
                     context,
@@ -126,6 +134,9 @@ class _PackageTypeState extends State<PackageType> {
                         builder: (context) => SearchPackage(
                               id: widget.id,
                               type: _value,
+                              FUllNAme: widget.FullName,
+                              uid: widget.uid,
+                              OldhomeName: widget.OldhomeName,
                             )));
               });
             },
@@ -145,6 +156,7 @@ class _PackageTypeState extends State<PackageType> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
+                    physics: ScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,
@@ -158,8 +170,11 @@ class _PackageTypeState extends State<PackageType> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PackagedetailUser(
-                                            id: widget.id,
+                                            OHid: widget.id,
                                             name: life,
+                                            FullNAme: widget.FullName,
+                                            uid: widget.uid,
+                                            OldhomeName: widget.OldhomeName,
                                           )));
                             });
                           },

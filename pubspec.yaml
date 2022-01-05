@@ -54,7 +54,7 @@ dependencies:
   build_runner: any
   getwidget: ^2.0.4
   dropdownfield: any
-
+  intl: any
 
 
 dev_dependencies:

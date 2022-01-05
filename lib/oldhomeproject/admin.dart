@@ -1,20 +1,65 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:old/oldhomeproject/ViewHistoryoldhome.dart';
 import 'package:old/oldhomeproject/packagesname.dart';
-import 'package:old/silver.dart';
+import 'package:old/oldhomeproject/ViewRequest.dart';
 import 'package:old/oldhomeproject/viewsericesname.dart';
 import 'adddetail.dart';
+import 'login.dart';
+
+class Post {
+  Post({
+    required this.Id,
+    required this.FullName,
+    required this.Pid,
+    required this.PackageName,
+    required this.Status,
+    required this.OHId,
+  });
+  var Id;
+  var FullName;
+  var Pid;
+  var PackageName;
+  var Status;
+  var OHId;
+
+  factory Post.fromMap(Map<String, dynamic> json) => Post(
+        Id: json["Id"],
+        FullName: json["FullName"],
+        Pid: json["Pid"],
+        PackageName: json["PackageName"],
+        Status: json["Status"],
+        OHId: json["OHId"],
+      );
+}
 
 class Admin extends StatefulWidget {
   final int id;
   final int idp;
   final int ids;
-  Admin({Key? key, required this.id, required this.idp, required this.ids})
-      : super(key: key);
+  int count;
+  Admin({
+    Key? key,
+    required this.id,
+    required this.idp,
+    required this.ids,
+    required this.count,
+  }) : super(key: key);
   @override
   _AdminState createState() => _AdminState();
 }
 
 class _AdminState extends State<Admin> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      widget.count;
+    });
+    print(widget.count);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +73,7 @@ class _AdminState extends State<Admin> {
           child: Column(
             children: <Widget>[
               const SizedBox(
-                height: 40.0,
+                height: 10.0,
               ),
               Container(
                   height: 100,
@@ -56,7 +101,7 @@ class _AdminState extends State<Admin> {
                     },
                   )),
               const SizedBox(
-                height: 40.0,
+                height: 25.0,
               ),
               Container(
                   height: 100,
@@ -86,7 +131,7 @@ class _AdminState extends State<Admin> {
                     },
                   )),
               const SizedBox(
-                height: 40.0,
+                height: 25.0,
               ),
               Container(
                   height: 100,
@@ -116,32 +161,73 @@ class _AdminState extends State<Admin> {
                     },
                   )),
               const SizedBox(
-                height: 50.0,
+                height: 25.0,
               ),
-              Container(
-                height: 100,
-                width: 400,
-                padding: const EdgeInsets.all(10),
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 80,
+                      width: 400,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          'View Request (${widget.count})',
+                          style: TextStyle(fontSize: 30, color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewRequest(
+                                        id: widget.id,
+                                      )));
+                        },
                       ),
                     ),
                   ),
-                  child: const Text(
-                    'View Request',
-                    style: TextStyle(fontSize: 30, color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Lala()));
-                  },
-                ),
+                ],
               ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                  height: 100,
+                  width: 400,
+                  padding: const EdgeInsets.all(10),
+                  child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Request History',
+                      style: TextStyle(fontSize: 30, color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewHistory(
+                                    id: widget.id,
+                                  )));
+                    },
+                  )),
             ],
           ),
         ),

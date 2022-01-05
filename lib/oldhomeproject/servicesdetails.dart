@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/addservices.dart';
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 import 'package:getwidget/getwidget.dart';
 
 List<Post> postFromJson(String str) =>
@@ -85,6 +84,9 @@ class _ServicesDetailsState extends State<ServicesDetails> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                  physics: ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     return Container(

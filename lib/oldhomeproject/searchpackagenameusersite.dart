@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/Packagesdetailuserside.dart';
-import 'package:old/oldhomeproject/packagesdetail.dart';
 import 'dart:convert';
-import 'package:old/addpackages.dart';
-import 'package:old/url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -39,7 +37,16 @@ class Post {
 class SearchPackage extends StatefulWidget {
   final int id;
   var type;
-  SearchPackage({Key? key, required this.id, required this.type})
+  String FUllNAme;
+  int uid;
+  String OldhomeName;
+  SearchPackage(
+      {Key? key,
+      required this.id,
+      required this.type,
+      required this.FUllNAme,
+      required this.uid,
+      required this.OldhomeName})
       : super(key: key);
 
   @override
@@ -49,7 +56,7 @@ class SearchPackage extends StatefulWidget {
 class _SearchPackageState extends State<SearchPackage> {
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://192.168.10.9/OldHome1/api/oldhome/PackageSearch?type=${widget.type}&Id=${widget.id}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/PackageSearch?type=${widget.type}&Id=${widget.id}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -81,6 +88,9 @@ class _SearchPackageState extends State<SearchPackage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                  physics: ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     return TextButton(
@@ -92,7 +102,10 @@ class _SearchPackageState extends State<SearchPackage> {
                               MaterialPageRoute(
                                   builder: (context) => PackagedetailUser(
                                         name: life,
-                                        id: widget.id,
+                                        OHid: widget.id,
+                                        FullNAme: widget.FUllNAme,
+                                        uid: widget.uid,
+                                        OldhomeName: widget.OldhomeName,
                                       )));
                         });
                       },

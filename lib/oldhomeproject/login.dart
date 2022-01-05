@@ -3,8 +3,8 @@ import 'package:old/oldhomeproject/admin.dart';
 import "package:flutter/material.dart";
 import 'package:old/oldhomeproject/register.dart';
 import 'package:http/http.dart' as http;
+import 'package:old/oldhomeproject/url.dart';
 import 'package:old/oldhomeproject/user.dart';
-import 'package:old/url.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,7 +18,20 @@ class _State extends State<LoginPage> {
   TextEditingController PasswordController = TextEditingController();
   TextEditingController UserTypeController = TextEditingController();
   TextEditingController IdController = TextEditingController();
+  var i;
+  late Future<int> futurePost;
+  Future countRequest() async {
+    final response = await http.get(Uri.parse(
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/Countnotification?id=${i}'));
+    if (response.statusCode == 200) {
+      count = jsonDecode(response.body) as int;
+    } else {
+      throw Exception('Failed');
+    }
+    return countRequest();
+  }
 
+  int count = 0;
   late String UserName, Password;
   late bool error, sending, success;
   late String msg;
@@ -29,6 +42,8 @@ class _State extends State<LoginPage> {
     error = false;
     sending = false;
     success = false;
+    //countRequest();
+    count = count;
     super.initState();
   }
 
@@ -43,6 +58,7 @@ class _State extends State<LoginPage> {
       print(res.body);
       var data = json.decode(res.body);
       int id = data['Id'];
+      i = data['Id'];
       String FullName = data['FullName'];
       print(id);
       if (data['UserType'] == 'oldhome') {
@@ -54,13 +70,19 @@ class _State extends State<LoginPage> {
                         id: id,
                         idp: id,
                         ids: id,
+                        count: count,
                       )));
         });
       }
       if (data['UserType'] == 'user') {
         setState(() {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => User()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => User(
+                        Fullname: FullName,
+                        uid: id,
+                      )));
         });
       }
       if (data["error"]) {
@@ -152,9 +174,8 @@ class _State extends State<LoginPage> {
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                     onPressed: () {
+                      countRequest();
                       login();
-                      //Navigator.push(context,
-                      //MaterialPageRoute(builder: (context) => hhcAdmin()));
                     },
                   )),
               Row(

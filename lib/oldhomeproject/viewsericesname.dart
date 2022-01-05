@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:old/oldhomeproject/addservices.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/servicesdetails.dart';
-import '../url.dart';
+import 'package:old/oldhomeproject/url.dart';
 
 List<Post> fetchFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromJson(x)));
@@ -73,6 +73,9 @@ class _ServicesNameState extends State<ServicesName> {
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                  physics: ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     return Container(
