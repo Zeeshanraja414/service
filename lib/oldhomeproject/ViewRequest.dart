@@ -12,7 +12,7 @@ class Post {
     required this.Status,
     required this.OHId,
     required this.BookingType,
-    //required this.Date,
+    required this.Date,
   });
   var Id;
   var FullName;
@@ -21,7 +21,7 @@ class Post {
   var Status;
   var OHId;
   var BookingType;
-  //var Date;
+  var Date;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
         Id: json["Id"],
@@ -31,6 +31,7 @@ class Post {
         Status: json["Status"],
         OHId: json["OHId"],
         BookingType: json["BookingType"],
+        Date: json["Date"],
       );
 }
 
@@ -52,7 +53,7 @@ class _ViewRequestState extends State<ViewRequest> {
   Future<void> Accept() async {
     var res = await http.patch(
         Uri.parse(
-            ('http://${IpAdress.ip}/OldHome1/api/oldhome/Updatestatus?id=${ui}&i=${oh}')),
+            ('http://${IpAdress.ip}/OldHome1/api/oldhome/Acceptstatus?id=${uid}&p=${pid}&o=${ohid}')),
         body: {
           'Status': 'Accepted',
         });
@@ -116,7 +117,7 @@ class _ViewRequestState extends State<ViewRequest> {
   Future<void> Reject() async {
     var res = await http.patch(
         Uri.parse(
-            ('http://${IpAdress.ip}/OldHome1/api/oldhome/Rejectstatus?id=${ui}&i=${oh}')),
+            ('http://${IpAdress.ip}/OldHome1/api/oldhome/Rejectstatus?id=${uid}&p=${pid}&o=${ohid}')),
         body: {
           'Status': 'Accepted',
         });
@@ -158,6 +159,7 @@ class _ViewRequestState extends State<ViewRequest> {
     }
   }
 
+  bool visible = true;
   @override
   void initState() {
     super.initState();
@@ -167,8 +169,9 @@ class _ViewRequestState extends State<ViewRequest> {
     futurePost = getRequest();
   }
 
-  var oh;
-  var ui;
+  var ohid;
+  var uid;
+  var pid;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,8 +196,9 @@ class _ViewRequestState extends State<ViewRequest> {
                         shrinkWrap: true,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          oh = snapshot.data![index].OHId;
-                          ui = snapshot.data![index].Pid;
+                          ohid = snapshot.data![index].OHId;
+                          pid = snapshot.data![index].Pid;
+                          uid = snapshot.data![index].Id;
                           return Container(
                             margin: EdgeInsets.all(5),
                             decoration: BoxDecoration(
@@ -271,7 +275,7 @@ class _ViewRequestState extends State<ViewRequest> {
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 105, 0, 0),
                                   child: Text(
-                                    'Status                      :',
+                                    'Date                         :',
                                     style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
@@ -283,6 +287,28 @@ class _ViewRequestState extends State<ViewRequest> {
                                   padding:
                                       const EdgeInsets.fromLTRB(200, 105, 0, 0),
                                   child: Text(
+                                    snapshot.data![index].Date,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 140, 0, 0),
+                                  child: Text(
+                                    'Status                      :',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(200, 140, 0, 0),
+                                  child: Text(
                                     snapshot.data![index].Status,
                                     style: TextStyle(
                                       fontSize: 20,
@@ -291,18 +317,16 @@ class _ViewRequestState extends State<ViewRequest> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(90, 140, 0, 0),
+                                      const EdgeInsets.fromLTRB(90, 175, 0, 0),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Accept();
                                       decrement();
                                       setState(() {
-                                        Navigator.pushReplacement(
-                                            context,
+                                        Accept();
+                                        Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        super.widget));
+                                                builder: (context) =>
+                                                    super.widget));
                                       });
                                     },
                                     child: Text(
@@ -315,17 +339,21 @@ class _ViewRequestState extends State<ViewRequest> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(200, 140, 0, 0),
+                                      const EdgeInsets.fromLTRB(200, 175, 0, 0),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       Reject();
                                       setState(() {
-                                        Navigator.pushReplacement(
-                                            context,
+                                        Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        super.widget));
+                                                builder: (context) =>
+                                                    super.widget));
+                                        // Navigator.pushReplacement(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder:
+                                        //             (BuildContext context) =>
+                                        //                 super.widget));
                                       });
                                     },
                                     child: Text(

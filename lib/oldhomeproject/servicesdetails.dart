@@ -13,26 +13,26 @@ String postToJson(List<Post> data) =>
 
 class Post {
   Post({
-    this.id,
+    this.Id,
     this.serviceId,
     this.name,
     this.serviceName,
   });
 
-  var id;
+  var Id;
   var serviceId;
   var name;
   var serviceName;
 
   factory Post.fromJson(Map<String, dynamic> json) => Post(
-        id: json["\u0024id"],
+        Id: json["Id"],
         serviceId: json["ServiceId"],
         name: json["name"],
         serviceName: json["ServiceName"],
       );
 
   Map<String, dynamic> toJson() => {
-        "\u0024id": id,
+        "Id": Id,
         "ServiceId": serviceId,
         "name": name,
         "ServiceName": serviceName,
@@ -41,20 +41,23 @@ class Post {
 
 class ServicesDetails extends StatefulWidget {
   final String packagename;
+  int id;
   ServicesDetails({
     Key? key,
     required this.packagename,
+    required this.id,
   }) : super(key: key);
   @override
   _ServicesDetailsState createState() => _ServicesDetailsState();
 }
 
 class _ServicesDetailsState extends State<ServicesDetails> {
+  var id;
   late Future<List<Post>> futurePost;
   late final ImageErrorWidgetBuilder? errorBuilder;
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/servicesimage?Imagee=${widget.packagename}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/servicesimage?Imagee=${widget.packagename}&id=${widget.id}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -89,6 +92,7 @@ class _ServicesDetailsState extends State<ServicesDetails> {
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
+                    id = snapshot.data![index].Id;
                     return Container(
                       child: Column(
                         children: [

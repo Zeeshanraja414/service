@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
@@ -138,32 +139,45 @@ class _MultiimageState extends State<Multiimage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Upload Image'),
+        title: const Text('ADD SERVICES'),
       ),
-      body: Column(
-        children: [
-          TextFormField(
-            controller: ServiceNameController,
-            decoration: InputDecoration(
-              labelText: 'Service Name',
-              border: OutlineInputBorder(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
             ),
-          ),
-          ElevatedButton(
-            onPressed: loadAssets,
-            child: const Text('Pick Image'),
-          ),
-          Expanded(
-            child: buildGridView(),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await _saveImage();
-              //sendName();
-            },
-            child: const Text('Save'),
-          )
-        ],
+            TextFormField(
+              controller: ServiceNameController,
+              decoration: InputDecoration(
+                labelText: 'Service Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: loadAssets,
+              child: const Text('Pick Image'),
+            ),
+            Expanded(
+              child: buildGridView(),
+            ),
+            Container(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await _saveImage();
+                  //sendName();
+                },
+                child: const Text('Save'),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

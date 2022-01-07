@@ -90,6 +90,7 @@ class _ServiceNameUserState extends State<ServiceNameUser> {
                                   MaterialPageRoute(
                                       builder: (context) => ServicesDetails(
                                             packagename: packagename,
+                                            id: widget.idsu,
                                           )));
                             },
                             child: Text(

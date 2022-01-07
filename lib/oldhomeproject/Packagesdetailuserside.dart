@@ -16,7 +16,8 @@ class Post {
       required this.Duration,
       required this.TotalPrice,
       required this.StayDuration,
-      required this.OldhomeName});
+      required this.OldhomeName,
+      required this.Date});
   var Pid;
   var BookingType;
   var PackageName;
@@ -25,6 +26,7 @@ class Post {
   var TotalPrice;
   var StayDuration;
   var OldhomeName;
+  var Date;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
         Pid: json["Pid"],
@@ -35,6 +37,7 @@ class Post {
         TotalPrice: json["TotalPrice"],
         StayDuration: json["StayDuration"],
         OldhomeName: json["OldhomeName"],
+        Date: json["Date"],
       );
 }
 
@@ -57,15 +60,42 @@ class PackagedetailUser extends StatefulWidget {
 }
 
 class _PackagedetailUserState extends State<PackagedetailUser> {
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    TextButton(
+      child: Text("Ok"),
+      onPressed: () {
+        Navigator.of(context).pop;
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Request Send Successfully"),
+      content: Text("ThankYou For Your Trust"),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   late bool error, sending, success;
   late String msg;
   var Pid;
   var PackageName;
   var b;
-  var date = DateTime.now();
   String url = "http://${IpAdress.ip}/OldHome1/api/oldhome/Sendrequestpost";
 
   Future<void> Request() async {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd-MM-yyyy');
+    //String formattedTime = DateFormat('kk:mm:a').format(now);
+    String formattedDate = formatter.format(now);
     var res = await http.post(Uri.parse(url), body: {
       'FullName': widget.FullNAme,
       'PackageName': PackageName,
@@ -75,38 +105,11 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
       'OHId': widget.OHid.toString(),
       'OldhomeName': widget.OldhomeName,
       'BookingType': b,
-      'Date': date,
+      'Date': formattedDate,
     });
     if (res.statusCode == 200) {
       print(res.body);
       var data = json.decode(res.body);
-      if (data["error"]) {
-        setState(() {
-          sending = false;
-          error = true;
-          msg = data["message"];
-        });
-      } else {
-        widget.FullNAme = '';
-        widget.uid = '' as int;
-        widget.OHid = '' as int;
-        PackageName = '';
-        Pid = '' as int;
-        widget.OldhomeName = '';
-        b = '';
-        date = '' as DateTime;
-
-        setState(() {
-          sending = false;
-          success = true;
-        });
-      }
-    } else {
-      setState(() {
-        error = true;
-        msg = "Error during sending data";
-        sending = false;
-      });
     }
   }
 
@@ -322,11 +325,15 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Request();
-                },
-                child: Text('Send Request'),
+              Container(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Request();
+                    showAlertDialog(context);
+                  },
+                  child: Text('Send Request'),
+                ),
               ),
             ],
           ),

@@ -16,7 +16,7 @@ class Post {
     required this.Status,
     required this.OHId,
     required this.BookingType,
-    //required this.Date,
+    required this.Date,
   });
   var Id;
   var FullName;
@@ -25,7 +25,7 @@ class Post {
   var Status;
   var OHId;
   var BookingType;
-  // var Date;
+  var Date;
 
   factory Post.fromMap(Map<String, dynamic> json) => Post(
         Id: json["Id"],
@@ -35,6 +35,7 @@ class Post {
         Status: json["Status"],
         OHId: json["OHId"],
         BookingType: json["BookingType"],
+        Date: json["Date"],
       );
 }
 
@@ -165,7 +166,7 @@ class _ViewHistoryState extends State<ViewHistory> {
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 105, 0, 0),
                                 child: Text(
-                                  'Status                      :',
+                                  'Date                         :',
                                   style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -176,6 +177,28 @@ class _ViewHistoryState extends State<ViewHistory> {
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(200, 105, 0, 0),
+                                child: Text(
+                                  snapshot.data![index].Date,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 140, 0, 0),
+                                child: Text(
+                                  'Status                      :',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(200, 140, 0, 0),
                                 child: Text(
                                   snapshot.data![index].Status,
                                   style: TextStyle(

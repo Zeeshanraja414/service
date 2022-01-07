@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:old/oldhomeproject/Usersiteoldhomedetails.dart';
 import 'package:old/oldhomeproject/userseeoldhomename.dart';
 import 'package:old/oldhomeproject/url.dart';
@@ -49,11 +50,13 @@ class View {
   var OldhomeName;
   var PackageName;
   var BookingType;
+  var Date;
   View({
     required this.Status,
     required this.OldhomeName,
     required this.BookingType,
     required this.PackageName,
+    required this.Date,
   });
 
   factory View.fromMap(Map<String, dynamic> json) => View(
@@ -61,6 +64,7 @@ class View {
         OldhomeName: json["OldhomeName"],
         PackageName: json["PackageName"],
         BookingType: json["BookingType"],
+        Date: json["Date"],
       );
 }
 
@@ -114,7 +118,7 @@ class _UserState extends State<User> {
 
   Future<void> refresh() async {
     setState(() {
-      futureSearch = searchOld();
+      //futureSearch = searchOld();
       futureuser = ViewRequestuser();
     });
   }
@@ -156,7 +160,7 @@ class _UserState extends State<User> {
                             child: Stack(
                               children: <Widget>[
                                 Text(
-                                  'User FullName       :',
+                                  'Old Home Name   :',
                                   style: TextStyle(
                                     color: Colors.blue,
                                     fontSize: 17,
@@ -168,7 +172,7 @@ class _UserState extends State<User> {
                                   child: Text(
                                     snapshot.data![index].OldhomeName,
                                     style: TextStyle(
-                                      fontSize: 17,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ),
@@ -186,7 +190,7 @@ class _UserState extends State<User> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(150, 35, 0, 0),
+                                      const EdgeInsets.fromLTRB(160, 35, 0, 0),
                                   child: Text(
                                     snapshot.data![index].PackageName,
                                     style: TextStyle(
@@ -208,7 +212,7 @@ class _UserState extends State<User> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(150, 70, 0, 0),
+                                      const EdgeInsets.fromLTRB(160, 70, 0, 0),
                                   child: Text(
                                     snapshot.data![index].BookingType,
                                     style: TextStyle(
@@ -220,6 +224,28 @@ class _UserState extends State<User> {
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 105, 0, 0),
                                   child: Text(
+                                    'Date                         :',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(160, 105, 0, 0),
+                                  child: Text(
+                                    snapshot.data![index].Date,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 140, 0, 0),
+                                  child: Text(
                                     'Status                      :',
                                     style: TextStyle(
                                       color: Colors.blue,
@@ -230,7 +256,7 @@ class _UserState extends State<User> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(150, 105, 0, 0),
+                                      const EdgeInsets.fromLTRB(160, 140, 0, 0),
                                   child: Text(
                                     snapshot.data![index].Status,
                                     style: TextStyle(
