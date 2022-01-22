@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart';
@@ -6,6 +7,7 @@ import 'package:old/oldhomeproject/ViewGuardianDetailsOldHomeSide.dart';
 import 'dart:convert';
 import 'package:old/oldhomeproject/url.dart';
 import 'package:intl/intl.dart';
+import 'package:old/room.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -52,12 +54,37 @@ class ViewHistory extends StatefulWidget {
   _ViewHistoryState createState() => _ViewHistoryState();
 }
 
+DateTime _date = DateTime.now();
+Future<Null> _selectDate(BuildContext context) async {
+  DateTime? _datePicker = await showDatePicker(
+    context: context,
+    initialDate: _date, // Current Date
+    firstDate: DateTime(2010), // First Date
+    lastDate: DateTime(2050), // Last Date
+    // textDirection:
+    // TextDirection.ltr, // Header Text or Button Direction ltr or rtl
+    initialDatePickerMode: DatePickerMode.day, // Day or Year Mode
+    //   selectableDayPredicate: (DateTime val) =>
+    //       val.weekday == 6 || val.weekday == 7 ? false : true, // WeekDay Off
+    // selectableDayPredicate: (DateTime val) =>
+    //     val.isBefore(val) ? false : true,
+  );
+
+  if (_datePicker != null && _datePicker != _date) {
+    _date = _datePicker;
+    //SelectedDate = _date;
+    print(
+        //SelectedDate.toString(),
+        _date);
+  }
+}
+
 class _ViewHistoryState extends State<ViewHistory> {
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
         'http://${IpAdress.ip}/OldHome1/api/oldhome/viewhistory?id=${widget.id}'));
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
+      //print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       return parsed.map<Post>((json) => Post.fromMap(json)).toList();
     } else {
@@ -76,6 +103,8 @@ class _ViewHistoryState extends State<ViewHistory> {
     // setState(() {
     //   isVisible=!isVisible;
     // });
+    _date = DateTime.now();
+
     futurePost = fetchPost();
   }
 
@@ -291,6 +320,76 @@ class _ViewHistoryState extends State<ViewHistory> {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       var date = _date.day.toString() +
+              //           '-' +
+              //           '0' +
+              //           _date.month.toString() +
+              //           '-' +
+              //           _date.year.toString();
+              //       print(date);
+              //       Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => Room(date: date)));
+              //     },
+              //     child: Text('v')),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: RaisedButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         _selectDate(context);
+              //       });
+              //     },
+              //     color: Colors.blue,
+              //     child: Row(
+              //       children: [
+              //         Text(
+              //           'Select Date',
+              //           style: TextStyle(color: Colors.white),
+              //         ),
+              //         SizedBox(
+              //           width: 3,
+              //         ),
+              //         Icon(
+              //           Icons.calendar_today,
+              //           color: Colors.white,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // Card(
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Row(
+              //       children: [
+              //         Text(
+              //           'Date: ',
+              //           style: TextStyle(fontSize: 20, color: Colors.teal),
+              //         ),
+              //         Text(
+              //           _date.day.toString() +
+              //               '-' +
+              //               _date.month.toString() +
+              //               '-' +
+              //               _date.year.toString(),
+              //           style: TextStyle(fontSize: 15),
+              //         ),
+              //         SizedBox(
+              //           width: 150,
+              //         ),
+              //         // Text(
+              //         //   'Time: ',
+              //         //   style: TextStyle(fontSize: 20, color: Colors.teal),
+              //         // ),
+              //         // Text('${_time.hour}:${_time.minute} '),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
