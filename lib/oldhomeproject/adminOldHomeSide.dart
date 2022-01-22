@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:old/oldhomeproject/ViewHistoryoldhome.dart';
-import 'package:old/oldhomeproject/packagesname.dart';
-import 'package:old/oldhomeproject/ViewRequest.dart';
-import 'package:old/oldhomeproject/viewsericesname.dart';
-import 'adddetail.dart';
+import 'package:old/oldhomeproject/ViewHistoryOldHomeSide.dart';
+import 'package:old/oldhomeproject/packagesnameOldHomeSide.dart';
+import 'package:old/oldhomeproject/ViewRequestOldHomeSide.dart';
+import 'package:old/oldhomeproject/viewsericesnameOldHomeSide.dart';
+import 'adddetailOldHomeSide.dart';
 import 'login.dart';
 
 class Post {
@@ -64,7 +64,8 @@ class _AdminState extends State<Admin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin'),
+        title: const Text('ADMIN'),
+        centerTitle: true,
       ),
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -182,7 +183,7 @@ class _AdminState extends State<Admin> {
                           ),
                         ),
                         child: Text(
-                          'View Request (${widget.count})',
+                          'View Request  (${widget.count})',
                           style: TextStyle(fontSize: 30, color: Colors.white),
                         ),
                         onPressed: () {

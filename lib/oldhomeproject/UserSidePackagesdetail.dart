@@ -47,14 +47,14 @@ class PackagedetailUser extends StatefulWidget {
   String FullNAme;
   int uid;
   String OldhomeName;
-  PackagedetailUser(
-      {Key? key,
-      required this.name,
-      required this.OHid,
-      required this.FullNAme,
-      required this.uid,
-      required this.OldhomeName})
-      : super(key: key);
+  PackagedetailUser({
+    Key? key,
+    required this.name,
+    required this.OHid,
+    required this.FullNAme,
+    required this.uid,
+    required this.OldhomeName,
+  }) : super(key: key);
   @override
   _PackagedetailUserState createState() => _PackagedetailUserState();
 }
@@ -62,17 +62,17 @@ class PackagedetailUser extends StatefulWidget {
 class _PackagedetailUserState extends State<PackagedetailUser> {
   showAlertDialog(BuildContext context) {
     // set up the button
-    TextButton(
-      child: Text("Ok"),
-      onPressed: () {
-        Navigator.of(context).pop;
-      },
-    );
+    // TextButton(
+    //   child: Text("Ok"),
+    //   onPressed: () {
+    //     Navigator.of(context).pop;
+    //   },
+    // );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Request Send Successfully"),
-      content: Text("ThankYou For Your Trust"),
+      //content: Text(""),
     );
 
     // show the dialog
@@ -106,6 +106,9 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
       'OldhomeName': widget.OldhomeName,
       'BookingType': b,
       'Date': formattedDate,
+      'RelativeName': RelativeName.text,
+      'Relation': dropdownValue,
+      'Gender': _value,
     });
     if (res.statusCode == 200) {
       print(res.body);
@@ -125,6 +128,8 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
     }
   }
 
+  TextEditingController RelativeName = TextEditingController();
+  TextEditingController Relation = TextEditingController();
   late Future<List<Post>> futurePost;
   @override
   void initState() {
@@ -135,6 +140,27 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
     futurePost = fetchPost();
   }
 
+  List<String> items = <String>[
+    'Son',
+    'Daughter',
+    'Husband',
+    'Wife',
+    'Brother',
+    'Sister',
+    'GrandSon',
+    'GrandDaughter',
+    'Uncle',
+    'Aunt',
+    'Nephew',
+    'Niece',
+    'Cousin'
+  ];
+
+  var dropdownValue = 'Son';
+  Object? _value = '';
+
+  bool notVisibe = false;
+  bool Visible = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -162,6 +188,120 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                           padding: EdgeInsets.all(10),
                           child: Column(
                             children: [
+                              Visibility(
+                                visible: snapshot.data![index].BookingType ==
+                                        'BookforOther'
+                                    ? Visible
+                                    : notVisibe,
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                        width: 2,
+                                      )),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Add Relative Detail',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: TextFormField(
+                                          controller: RelativeName,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Relative Name',
+                                          ),
+                                          validator: (val) {
+                                            if (val!.isEmpty) {
+                                              return 'Required';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: DropdownButton<String>(
+                                          isExpanded: true,
+                                          autofocus: true,
+                                          focusColor: Colors.white,
+                                          hint: const Text(
+                                            'Relation With Guardian',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 20,
+                                              color: Colors.teal,
+                                            ),
+                                          ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownValue = newValue!;
+                                            });
+                                          },
+                                          value: dropdownValue,
+                                          items: items
+                                              .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            },
+                                          ).toList(),
+                                          dropdownColor: Colors.white,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Radio(
+                                              value: 'Male',
+                                              activeColor: Colors.blue,
+                                              groupValue: _value,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _value = value;
+                                                });
+                                              }),
+                                          const Text(
+                                            'Male',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 50,
+                                          ),
+                                          Radio(
+                                            value: 'Female',
+                                            activeColor: Colors.blue,
+                                            groupValue: _value,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _value = value;
+                                              });
+                                            },
+                                          ),
+                                          const Text(
+                                            'Female',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Text(
                                 'Booking Type',
                                 style: TextStyle(

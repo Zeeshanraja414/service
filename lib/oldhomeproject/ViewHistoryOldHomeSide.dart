@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart';
+import 'package:old/oldhomeproject/ViewBookingforotherdetailsOLDHOMESIDE.dart';
+import 'package:old/oldhomeproject/ViewGuardianDetailsOldHomeSide.dart';
 import 'dart:convert';
 import 'package:old/oldhomeproject/url.dart';
 import 'package:intl/intl.dart';
@@ -63,20 +66,28 @@ class _ViewHistoryState extends State<ViewHistory> {
     }
   }
 
+  var uid;
+  bool isVisible = false;
+  bool Visible = true;
   late Future<List<Post>> futurePost;
   @override
   void initState() {
     super.initState();
+    // setState(() {
+    //   isVisible=!isVisible;
+    // });
     futurePost = fetchPost();
   }
 
   var ohid;
+  var pid;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Package Details'),
+          title: Text('Requests History'),
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -91,11 +102,15 @@ class _ViewHistoryState extends State<ViewHistory> {
                       shrinkWrap: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
-                        ohid = snapshot.data![index].OHId;
                         return Container(
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: Colors.grey[300],
+                              color: Colors.grey[400],
+                              // snapshot.data![index].Status == 'Accepted'
+                              //     ? Colors.green
+                              //     : snapshot.data![index].Status == 'Rejected'
+                              //         ? Colors.red
+                              //         : Colors.grey[200],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: Colors.blue,
@@ -126,6 +141,10 @@ class _ViewHistoryState extends State<ViewHistory> {
                                   'Selected Package :',
                                   style: TextStyle(
                                     color: Colors.blue,
+                                    // color: snapshot.data![index].Status ==
+                                    //         'Pending'
+                                    //     ? Colors.green
+                                    //     : Colors.red,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
@@ -206,6 +225,60 @@ class _ViewHistoryState extends State<ViewHistory> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(100, 170, 0, 0),
+                                  child: Visibility(
+                                    visible: snapshot.data![index].Status ==
+                                            'Accepted'
+                                        ? Visible
+                                        : isVisible,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        uid = snapshot.data![index].Id;
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OldHomeViewGuardianDetails(
+                                                      id: uid,
+                                                    )));
+                                      },
+                                      child: Text('View Guardian Information'),
+                                    ),
+                                  )),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(100, 210, 0, 0),
+                                  child: Visibility(
+                                    visible: snapshot.data![index].Status ==
+                                            'Accepted'
+                                        ? snapshot.data![index].BookingType ==
+                                                'BookforOther'
+                                            ? Visible
+                                            : isVisible
+                                        : isVisible,
+                                    child: Container(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          uid = snapshot.data![index].Id;
+                                          ohid = snapshot.data![index].OHId;
+                                          pid = snapshot.data![index].Pid;
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BookforotherDetails(
+                                                        id: uid,
+                                                        ohid: ohid,
+                                                        pid: pid,
+                                                      )));
+                                        },
+                                        child: Text('Other Details'),
+                                      ),
+                                    ),
+                                  )),
                             ],
                           ),
                         );

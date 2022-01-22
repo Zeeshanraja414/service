@@ -78,7 +78,7 @@ class _ServicesDetailsState extends State<ServicesDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List Of Services'),
+        title: Text('Services'),
         centerTitle: true,
       ),
       body: Center(

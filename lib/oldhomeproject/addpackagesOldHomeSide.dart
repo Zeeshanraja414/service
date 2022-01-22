@@ -88,7 +88,8 @@ class _PackageState extends State<Package> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Packages'),
+        title: const Text('Add Packages'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -267,9 +268,10 @@ class _PackageState extends State<Package> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      validate;
+                      //validate;
                       setState(() {
                         sending = true;
+                        showAlertDialog(context);
                       });
                       if (_formkey.currentState!.validate()) {
                         sendPackage();
@@ -289,4 +291,30 @@ class _PackageState extends State<Package> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  // TextButton(
+  //   child: Text("Ok"),
+  //   onPressed: () {
+  // Navigator.of(context).pop;
+  //   },
+  // );
+  // Future.delayed(Duration(seconds: 2), () {
+  //   Navigator.of(context).pop(true);
+  // });
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Package Saved Successfully"),
+    //content: Text(""),
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

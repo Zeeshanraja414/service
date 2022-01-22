@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:old/oldhomeproject/admin.dart';
+import 'package:old/oldhomeproject/adminOldHomeSide.dart';
 import "package:flutter/material.dart";
 import 'package:old/oldhomeproject/register.dart';
 import 'package:http/http.dart' as http;
@@ -85,26 +85,10 @@ class _State extends State<LoginPage> {
                       )));
         });
       }
-      if (data["error"]) {
-        setState(() {
-          sending = false;
-          error = true;
-          msg = data["message"];
-        });
-      } else {
-        UserNameController.text = '';
-        PasswordController.text = '';
-
-        setState(() {
-          sending = false;
-          success = true;
-        });
-      }
     } else {
       setState(() {
-        error = true;
-        msg = "Error during sending data";
-        sending = false;
+        showAlertDialog(context);
+        print('Login Failed');
       });
     }
   }
@@ -203,4 +187,30 @@ class _State extends State<LoginPage> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  // TextButton(
+  //   child: Text("Ok"),
+  //   onPressed: () {
+  // Navigator.of(context).pop;
+  //   },
+  // );
+  Future.delayed(Duration(seconds: 1), () {
+    Navigator.of(context).pop(true);
+  });
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Login Failed"),
+    //content: Text(""),
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

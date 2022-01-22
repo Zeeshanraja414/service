@@ -158,7 +158,8 @@ class _DetailState extends State<Detail> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Details'),
+          title: Text('OLD HOME DETAILS'),
+          centerTitle: true,
         ),
         body: FutureBuilder<List<Post>>(
           future: futurePost,
@@ -283,7 +284,10 @@ class _DetailState extends State<Detail> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: () {
-                            send();
+                            //send();
+                            setState(() {
+                              showAlertDialog(context);
+                            });
                           },
                           child: const Text(
                             "Save",
@@ -302,4 +306,30 @@ class _DetailState extends State<Detail> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  // TextButton(
+  //   child: Text("Ok"),
+  //   onPressed: () {
+  // Navigator.of(context).pop;
+  //   },
+  // );
+  // Future.delayed(Duration(seconds: 2), () {
+  //   Navigator.of(context).pop(true);
+  // });
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Data Saved Successfully"),
+    //content: Text(""),
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

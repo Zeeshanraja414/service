@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/Packagesdetailuserside.dart';
+import 'package:old/oldhomeproject/packagesdetailOldHomeSide.dart';
 import 'dart:convert';
+import 'package:old/oldhomeproject/addpackagesOldHomeSide.dart';
 import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
@@ -34,29 +35,18 @@ class Post {
       );
 }
 
-class SearchPackage extends StatefulWidget {
+class View extends StatefulWidget {
   final int id;
-  var type;
-  String FUllNAme;
-  int uid;
-  String OldhomeName;
-  SearchPackage(
-      {Key? key,
-      required this.id,
-      required this.type,
-      required this.FUllNAme,
-      required this.uid,
-      required this.OldhomeName})
-      : super(key: key);
+  View({Key? key, required this.id}) : super(key: key);
 
   @override
-  _SearchPackageState createState() => _SearchPackageState();
+  _ViewState createState() => _ViewState();
 }
 
-class _SearchPackageState extends State<SearchPackage> {
+class _ViewState extends State<View> {
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/PackageSearch?type=${widget.type}&Id=${widget.id}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetail?Id=${widget.id}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -80,7 +70,8 @@ class _SearchPackageState extends State<SearchPackage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Packages'),
+          title: Text('Packages Name'),
+          centerTitle: true,
         ),
         resizeToAvoidBottomInset: true,
         body: FutureBuilder<List<Post>>(
@@ -93,26 +84,25 @@ class _SearchPackageState extends State<SearchPackage> {
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
-                    return TextButton(
-                      onPressed: () {
-                        setState(() {
-                          life = snapshot.data![index].PackageName.toString();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PackagedetailUser(
-                                        name: life,
-                                        OHid: widget.id,
-                                        FullNAme: widget.FUllNAme,
-                                        uid: widget.uid,
-                                        OldhomeName: widget.OldhomeName,
-                                      )));
-                        });
-                      },
-                      child: Text(
-                        snapshot.data![index].PackageName.toString(),
-                        style: TextStyle(
-                          fontSize: 35,
+                    return Container(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            life = snapshot.data![index].PackageName.toString();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Packagedetail(
+                                          name: life,
+                                          id: widget.id,
+                                        )));
+                          });
+                        },
+                        child: Text(
+                          snapshot.data![index].PackageName.toString(),
+                          style: TextStyle(
+                            fontSize: 35,
+                          ),
                         ),
                       ),
                     );
@@ -121,6 +111,16 @@ class _SearchPackageState extends State<SearchPackage> {
               return Center(child: Text('${snapshot.error}'));
             }
             return const Center(child: CircularProgressIndicator());
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          foregroundColor: Colors.black,
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Package(id: widget.id)));
           },
         ),
       ),

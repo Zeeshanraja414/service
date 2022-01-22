@@ -56,6 +56,8 @@ dependencies:
   dropdownfield: any
   intl: any
   date_time_picker: any
+  smooth_star_rating: ^1.1.1
+  rating_bar: any
 
 
 dev_dependencies:

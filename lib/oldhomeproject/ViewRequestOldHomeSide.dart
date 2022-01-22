@@ -178,6 +178,7 @@ class _ViewRequestState extends State<ViewRequest> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Requests'),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -323,10 +324,11 @@ class _ViewRequestState extends State<ViewRequest> {
                                       decrement();
                                       setState(() {
                                         Accept();
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    super.widget));
+                                        Navigator.of(context).pop();
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             super.widget));
                                       });
                                     },
                                     child: Text(
@@ -344,16 +346,11 @@ class _ViewRequestState extends State<ViewRequest> {
                                     onPressed: () {
                                       Reject();
                                       setState(() {
+                                        //Navigator.of(context).pop();
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     super.widget));
-                                        // Navigator.pushReplacement(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder:
-                                        //             (BuildContext context) =>
-                                        //                 super.widget));
                                       });
                                     },
                                     child: Text(

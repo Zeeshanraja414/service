@@ -68,6 +68,7 @@ class _PackagedetailState extends State<Packagedetail> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Package Details'),
+          centerTitle: true,
         ),
         body: FutureBuilder<List<Post>>(
           future: futurePost,

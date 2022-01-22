@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/packagetype%20user%20side.dart';
-import 'package:old/oldhomeproject/viewservicenameuser.dart';
+import 'package:old/oldhomeproject/UserSidepackagetype.dart';
+import 'package:old/oldhomeproject/UserSideviewservicename.dart';
 import 'package:old/oldhomeproject/url.dart';
 
 class Search {

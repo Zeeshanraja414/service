@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/packagesdetail.dart';
+import 'package:old/oldhomeproject/UserSidePackagesdetail.dart';
 import 'dart:convert';
 import 'package:old/oldhomeproject/url.dart';
 
@@ -34,23 +34,29 @@ class Post {
       );
 }
 
-class ViewPackageName extends StatefulWidget {
-  int idpu;
-  String FullName;
-  ViewPackageName({
-    Key? key,
-    required this.idpu,
-    required this.FullName,
-  }) : super(key: key);
+class SearchPackage extends StatefulWidget {
+  final int id;
+  var type;
+  String FUllNAme;
+  int uid;
+  String OldhomeName;
+  SearchPackage(
+      {Key? key,
+      required this.id,
+      required this.type,
+      required this.FUllNAme,
+      required this.uid,
+      required this.OldhomeName})
+      : super(key: key);
 
   @override
-  _ViewPackageNameState createState() => _ViewPackageNameState();
+  _SearchPackageState createState() => _SearchPackageState();
 }
 
-class _ViewPackageNameState extends State<ViewPackageName> {
+class _SearchPackageState extends State<SearchPackage> {
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetail?Id=${widget.idpu}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/PackageSearch?type=${widget.type}&Id=${widget.id}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -69,6 +75,7 @@ class _ViewPackageNameState extends State<ViewPackageName> {
     futurePost = fetchPost();
   }
 
+  var b;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -87,26 +94,27 @@ class _ViewPackageNameState extends State<ViewPackageName> {
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
-                    return Container(
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            var life =
-                                snapshot.data![index].PackageName.toString();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Packagedetail(
-                                          name: life,
-                                          id: widget.idpu,
-                                        )));
-                          });
-                        },
-                        child: Text(
-                          snapshot.data![index].PackageName.toString(),
-                          style: TextStyle(
-                            fontSize: 35,
-                          ),
+                    b = snapshot.data![index].BookingType;
+                    return TextButton(
+                      onPressed: () {
+                        setState(() {
+                          life = snapshot.data![index].PackageName.toString();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PackagedetailUser(
+                                        name: life,
+                                        OHid: widget.id,
+                                        FullNAme: widget.FUllNAme,
+                                        uid: widget.uid,
+                                        OldhomeName: widget.OldhomeName,
+                                      )));
+                        });
+                      },
+                      child: Text(
+                        snapshot.data![index].PackageName.toString(),
+                        style: TextStyle(
+                          fontSize: 35,
                         ),
                       ),
                     );

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/searchpackagenameusersite.dart';
+import 'package:old/oldhomeproject/UserSidesearchpackagename.dart';
 import 'dart:convert';
 import 'package:old/oldhomeproject/url.dart';
-import 'Packagesdetailuserside.dart';
+import 'UserSidePackagesdetail.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -77,6 +77,8 @@ class _PackageTypeState extends State<PackageType> {
 
   Object? _value = '';
   var life;
+  var b;
+  var booking;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,6 +163,7 @@ class _PackageTypeState extends State<PackageType> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (_, index) {
+                      booking = snapshot.data![index].BookingType;
                       return Container(
                         child: TextButton(
                           onPressed: () {

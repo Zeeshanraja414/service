@@ -34,7 +34,9 @@ class _MultiimageState extends State<Multiimage> {
     );
   }
 
+  var image;
   TextEditingController ServiceNameController = TextEditingController();
+
   //Object? _value = 'user';
   late bool error, sending, success;
   late String msg;
@@ -44,31 +46,11 @@ class _MultiimageState extends State<Multiimage> {
     var res = await http.post(Uri.parse(url), body: {
       'ServiceName': ServiceNameController.text,
       'Id': widget.id.toString(),
-      //'name': ,
+      'name': image,
     });
     if (res.statusCode == 200) {
       print(res.body);
       var data = json.decode(res.body);
-      if (data["error"]) {
-        setState(() {
-          sending = false;
-          error = true;
-          msg = data["message"];
-        });
-      } else {
-        ServiceNameController.text = '';
-        widget.id = '' as int;
-        setState(() {
-          sending = false;
-          success = true;
-        });
-      }
-    } else {
-      setState(() {
-        error = true;
-        msg = "Error during sending data";
-        sending = false;
-      });
     }
   }
 
@@ -101,7 +83,7 @@ class _MultiimageState extends State<Multiimage> {
     });
   }
 
-  String BASE_URL = "http://${IpAdress.ip}/OldHome1/api/oldhome/addservices";
+  // String BASE_URL = "http://${IpAdress.ip}/OldHome1/api/oldhome/Image?s=${ServiceNameController.text}&i=${widget.id}";
 
   _saveImage() async {
     if (images != null) {
@@ -118,9 +100,12 @@ class _MultiimageState extends State<Multiimage> {
           "ServiceName": ServiceNameController.text,
           //'Id': widget.id.toString(),
         });
-        var response = await dio.post(BASE_URL, data: formData);
+        var response = await dio.post(
+            "http://${IpAdress.ip}/OldHome1/api/oldhome/Image?s=${ServiceNameController.text}&i=${widget.id}",
+            data: formData);
         if (response.statusCode == 200) {
-          print(response.data);
+          print("picture" + response.data);
+          image = response.data;
         }
       }
     }
@@ -170,15 +155,51 @@ class _MultiimageState extends State<Multiimage> {
               width: 200,
               child: ElevatedButton(
                 onPressed: () async {
+                  var c = ServiceNameController.text;
                   await _saveImage();
+                  //print(ServiceNameController);
                   //sendName();
+                  setState(() {
+                    showAlertDialog(context);
+                  });
                 },
                 child: const Text('Save'),
               ),
-            )
+            ),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       print(images);
+            //     },
+            //     child: Text('Print')),
           ],
         ),
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  // TextButton(
+  //   child: Text("Ok"),
+  //   onPressed: () {
+  // Navigator.of(context).pop;
+  //   },
+  // );
+  // Future.delayed(Duration(seconds: 2), () {
+  //   Navigator.of(context).pop(true);
+  // });
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Services Add Successfully"),
+    //content: Text(""),
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

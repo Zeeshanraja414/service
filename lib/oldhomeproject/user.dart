@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:old/oldhomeproject/UserSideAddGuardianDetails.dart';
+import 'package:old/oldhomeproject/UserSideViewGuardianDetail.dart';
+import 'package:old/oldhomeproject/UserSideviewrequest.dart';
 import 'package:old/oldhomeproject/Usersiteoldhomedetails.dart';
-import 'package:old/oldhomeproject/userseeoldhomename.dart';
+import 'package:old/oldhomeproject/UserSideseeoldhomename.dart';
 import 'package:old/oldhomeproject/url.dart';
 
 class Search {
@@ -118,7 +121,6 @@ class _UserState extends State<User> {
 
   Future<void> refresh() async {
     setState(() {
-      //futureSearch = searchOld();
       futureuser = ViewRequestuser();
     });
   }
@@ -138,141 +140,68 @@ class _UserState extends State<User> {
         drawer: RefreshIndicator(
           onRefresh: refresh,
           child: Drawer(
-            child: FutureBuilder<List<View>>(
-                future: futureuser,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                        physics: ScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (_, index) {
-                          return Container(
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.blue,
-                                  width: 4,
-                                )),
-                            child: Stack(
-                              children: <Widget>[
-                                Text(
-                                  'Old Home Name   :',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 150),
-                                  child: Text(
-                                    snapshot.data![index].OldhomeName,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 35, 0, 0),
-                                  child: Text(
-                                    'Selected Package :',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(160, 35, 0, 0),
-                                  child: Text(
-                                    snapshot.data![index].PackageName,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 70, 0, 0),
-                                  child: Text(
-                                    'Booking Type         :',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(160, 70, 0, 0),
-                                  child: Text(
-                                    snapshot.data![index].BookingType,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 105, 0, 0),
-                                  child: Text(
-                                    'Date                         :',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(160, 105, 0, 0),
-                                  child: Text(
-                                    snapshot.data![index].Date,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 140, 0, 0),
-                                  child: Text(
-                                    'Status                      :',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(160, 140, 0, 0),
-                                  child: Text(
-                                    snapshot.data![index].Status,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        });
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('${snapshot.error}'));
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                }),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: 200,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GuardianInfo(
+                                        id: widget.uid,
+                                        name: widget.Fullname,
+                                      )));
+                        },
+                        child: Text(
+                          'Add Guardian Details',
+                        )),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 200,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserViewGuardianDetails(
+                                        id: widget.uid,
+                                      )));
+                        },
+                        child: Text(
+                          'View Guardian Details',
+                        )),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserViewRequest(
+                                      id: widget.uid,
+                                    )));
+                      },
+                      child: Text(
+                        'View Requests',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         body: SafeArea(

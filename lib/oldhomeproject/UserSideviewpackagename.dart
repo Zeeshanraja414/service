@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:old/oldhomeproject/packagesdetail.dart';
+import 'package:old/oldhomeproject/packagesdetailOldHomeSide.dart';
 import 'dart:convert';
-import 'package:old/oldhomeproject/addpackages.dart';
 import 'package:old/oldhomeproject/url.dart';
 
 List<Post> postFromJson(String str) =>
@@ -35,18 +34,23 @@ class Post {
       );
 }
 
-class View extends StatefulWidget {
-  final int id;
-  View({Key? key, required this.id}) : super(key: key);
+class ViewPackageName extends StatefulWidget {
+  int idpu;
+  String FullName;
+  ViewPackageName({
+    Key? key,
+    required this.idpu,
+    required this.FullName,
+  }) : super(key: key);
 
   @override
-  _ViewState createState() => _ViewState();
+  _ViewPackageNameState createState() => _ViewPackageNameState();
 }
 
-class _ViewState extends State<View> {
+class _ViewPackageNameState extends State<ViewPackageName> {
   Future<List<Post>> fetchPost() async {
     final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetail?Id=${widget.id}'));
+        'http://${IpAdress.ip}/OldHome1/api/oldhome/packagedetail?Id=${widget.idpu}'));
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -87,13 +91,14 @@ class _ViewState extends State<View> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            life = snapshot.data![index].PackageName.toString();
+                            var life =
+                                snapshot.data![index].PackageName.toString();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Packagedetail(
                                           name: life,
-                                          id: widget.id,
+                                          id: widget.idpu,
                                         )));
                           });
                         },
@@ -110,16 +115,6 @@ class _ViewState extends State<View> {
               return Center(child: Text('${snapshot.error}'));
             }
             return const Center(child: CircularProgressIndicator());
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: Colors.black,
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Package(id: widget.id)));
           },
         ),
       ),
