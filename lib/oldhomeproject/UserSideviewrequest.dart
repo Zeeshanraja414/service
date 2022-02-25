@@ -1,15 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:old/oldhomeproject/UserSidegiverating.dart';
 import 'package:old/oldhomeproject/url.dart';
 
 class View {
+  int Id;
+  int OHId;
   var Status;
   var OldhomeName;
   var PackageName;
   var BookingType;
   var Date;
   View({
+    required this.OHId,
+    required this.Id,
     required this.Status,
     required this.OldhomeName,
     required this.BookingType,
@@ -18,6 +23,8 @@ class View {
   });
 
   factory View.fromMap(Map<String, dynamic> json) => View(
+        OHId: json["OHId"],
+        Id: json["Id"],
         Status: json["Status"],
         OldhomeName: json["OldhomeName"],
         PackageName: json["PackageName"],
@@ -48,6 +55,8 @@ class _UserViewRequestState extends State<UserViewRequest> {
   }
 
   late Future<List<View>> futureuser;
+  bool isnotVisible = false;
+  bool Visible = true;
   @override
   void initState() {
     futureuser = ViewRequestuser();
@@ -189,6 +198,29 @@ class _UserViewRequestState extends State<UserViewRequest> {
                                       snapshot.data![index].Status,
                                       style: TextStyle(
                                         fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: snapshot.data![index].Status ==
+                                            'Accepted'
+                                        ? Visible
+                                        : isnotVisible,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          140, 175, 0, 0),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Rating(
+                                                        uid: widget.id,
+                                                        ohid: snapshot
+                                                            .data![index].OHId,
+                                                      )));
+                                        },
+                                        child: Text('Give Rating'),
                                       ),
                                     ),
                                   ),

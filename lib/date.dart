@@ -14,9 +14,9 @@ class Appointment extends StatefulWidget {
 
 class _AppointmentState extends State<Appointment> {
   DateTime _date = DateTime.now();
-  // TimeOfDay _time = TimeOfDay.now();
+  TimeOfDay _time = TimeOfDay.now();
   // DateTime SelectedDate = DateTime.now();
-  // TimeOfDay SelectedTime = TimeOfDay.now();
+  TimeOfDay SelectedTime = TimeOfDay.now();
   String selectedgender = 'Male';
   TextEditingController FnameController = TextEditingController();
   TextEditingController LnameController = TextEditingController();
@@ -33,7 +33,7 @@ class _AppointmentState extends State<Appointment> {
   @override
   void initState() {
     super.initState();
-    // _time = TimeOfDay.now();
+    _time = TimeOfDay.now();
     _date = DateTime.now();
   }
 
@@ -299,7 +299,7 @@ class _AppointmentState extends State<Appointment> {
                   child: RaisedButton(
                     onPressed: () {
                       setState(() {
-                        //_pickTime();
+                        _pickTime();
                       });
                     },
                     color: Colors.blue,
@@ -344,11 +344,11 @@ class _AppointmentState extends State<Appointment> {
                     SizedBox(
                       width: 150,
                     ),
-                    // Text(
-                    //   'Time: ',
-                    //   style: TextStyle(fontSize: 20, color: Colors.teal),
-                    // ),
-                    // Text('${_time.hour}:${_time.minute} '),
+                    Text(
+                      'Time: ',
+                      style: TextStyle(fontSize: 20, color: Colors.teal),
+                    ),
+                    Text('${_time.hour}:${_time.minute} '),
                   ],
                 ),
               ),
@@ -389,28 +389,29 @@ class _AppointmentState extends State<Appointment> {
     );
   }
 
-//   Future<Null> _pickTime() async {
-//     TimeOfDay? time = await showTimePicker(
-//         context: context,
-//         //initialTime: _time,
-//         builder: (BuildContext context, Widget? child) {
-//           return Theme(
-//             data: ThemeData(),
-//             child: MediaQuery(
-//               data:
-//                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-//               child: Directionality(
-//                 textDirection: TextDirection.ltr,
-//                 child: child!,
-//               ),
-//             ),
-//           );
-//         });
-//     if (time != null)
-//       setState(() {
-//         _time = time;
-//         SelectedTime = _time;
-//       });
-//     print(SelectedTime);
-//   }
+  Future<Null> _pickTime() async {
+    TimeOfDay? time = await showTimePicker(
+        context: context,
+        //initialTime: _time,
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData(),
+            child: MediaQuery(
+              data:
+                  MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: child!,
+              ),
+            ),
+          );
+        },
+        initialTime: _time);
+    if (time != null)
+      setState(() {
+        _time = time;
+        SelectedTime = _time;
+      });
+    print(SelectedTime);
+  }
 }

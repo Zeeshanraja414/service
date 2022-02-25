@@ -7,7 +7,8 @@ import 'package:old/oldhomeproject/ViewGuardianDetailsOldHomeSide.dart';
 import 'dart:convert';
 import 'package:old/oldhomeproject/url.dart';
 import 'package:intl/intl.dart';
-import 'package:old/room.dart';
+import 'package:old/Searchbydate.dart';
+import 'package:old/room2.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromMap(x)));
@@ -110,6 +111,17 @@ class _ViewHistoryState extends State<ViewHistory> {
 
   var ohid;
   var pid;
+
+  // Future<void> Deletedata() async {
+  //   var res = await http.delete(
+  //       Uri.parse(
+  //           "http://${IpAdress.ip}/OldHome1/api/oldhome/deleter?id=1022&ohid=1020&pid=10010"),
+  //       body: {});
+  //   if (res.statusCode == 200) {
+  //     print(res.body);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -259,7 +271,9 @@ class _ViewHistoryState extends State<ViewHistory> {
                                       const EdgeInsets.fromLTRB(100, 170, 0, 0),
                                   child: Visibility(
                                     visible: snapshot.data![index].Status ==
-                                            'Accepted'
+                                                'Accepted' &&
+                                            snapshot.data![index].BookingType ==
+                                                'BookforYourself'
                                         ? Visible
                                         : isVisible,
                                     child: ElevatedButton(
@@ -304,7 +318,7 @@ class _ViewHistoryState extends State<ViewHistory> {
                                                         pid: pid,
                                                       )));
                                         },
-                                        child: Text('Other Details'),
+                                        child: Text('Book For Other Details'),
                                       ),
                                     ),
                                   )),
@@ -390,6 +404,12 @@ class _ViewHistoryState extends State<ViewHistory> {
               //     ),
               //   ),
               // ),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.push(context,
+              //           MaterialPageRoute(builder: (context) => Room2()));
+              //     },
+              //     child: Text('Room')),
             ],
           ),
         ),

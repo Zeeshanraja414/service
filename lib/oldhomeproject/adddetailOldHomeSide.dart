@@ -22,6 +22,7 @@ class Post {
     required this.Gender,
     required this.UserType,
     required this.Password,
+    required this.Cost,
   });
   var Id;
   var UserName;
@@ -35,7 +36,7 @@ class Post {
   var Gender;
   var Password;
   var UserType;
-
+  var Cost;
   factory Post.fromMap(Map<String, dynamic> json) => Post(
         Id: json["Id"],
         UserName: json["UserName"],
@@ -49,6 +50,7 @@ class Post {
         Gender: json["Gender"],
         UserType: json["UserType"],
         Password: json["Password"],
+        Cost: json["Cost"],
       );
 }
 
@@ -72,6 +74,7 @@ class _DetailState extends State<Detail> {
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   TextEditingController UserTypeController = TextEditingController();
+  TextEditingController CostController = TextEditingController();
 
   late bool error, sending, success;
   late String msg;
@@ -103,6 +106,8 @@ class _DetailState extends State<Detail> {
         'UserName': UserNameController.text,
         'Password': PasswordController.text,
         'UserType': UserTypeController.text,
+        'Rating': 0.toString(),
+        'Cost': CostController.text.toString(),
       },
     );
     if (res.statusCode == 200) {
@@ -190,6 +195,7 @@ class _DetailState extends State<Detail> {
                       snapshot.data![index].TotalSeats.toString();
                   VacantSeatsController.text =
                       snapshot.data![index].VacantSeats.toString();
+                  CostController.text = snapshot.data![index].Cost.toString();
                   SizedBox(height: 30);
                   return Column(
                     children: [
@@ -226,6 +232,61 @@ class _DetailState extends State<Detail> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: "City"),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Row(
+                          children: [
+                            Radio(
+                                value: 'Male',
+                                activeColor: Colors.blue,
+                                groupValue: _value,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value = value;
+                                  });
+                                }),
+                            const Text(
+                              'Male',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 50,
+                            ),
+                            Radio(
+                              value: 'Female',
+                              activeColor: Colors.blue,
+                              groupValue: _value,
+                              onChanged: (value) {
+                                setState(() {
+                                  _value = value;
+                                });
+                              },
+                            ),
+                            const Text(
+                              'Female',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: CostController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Cost Per Month"),
+                      ),
                       SizedBox(height: 20),
                       TextFormField(
                         controller: TotalSeatsController,
@@ -241,50 +302,10 @@ class _DetailState extends State<Detail> {
                             labelText: "Vacant Seats"),
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Radio(
-                              value: 'Male',
-                              activeColor: Colors.blue,
-                              groupValue: _value,
-                              onChanged: (value) {
-                                setState(() {
-                                  _value = value;
-                                });
-                              }),
-                          const Text(
-                            'Male',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 50,
-                          ),
-                          Radio(
-                            value: 'Female',
-                            activeColor: Colors.blue,
-                            groupValue: _value,
-                            onChanged: (value) {
-                              setState(() {
-                                _value = value;
-                              });
-                            },
-                          ),
-                          const Text(
-                            'FeMale',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: () {
-                            //send();
+                            send();
                             setState(() {
                               showAlertDialog(context);
                             });

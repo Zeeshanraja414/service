@@ -61,7 +61,7 @@ class _BookforotherDetailsState extends State<BookforotherDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Guardian Information'),
+        title: Text('Book for other Details'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -80,7 +80,7 @@ class _BookforotherDetailsState extends State<BookforotherDetails> {
                             p = snapshot.data![index].Pid;
                             return Column(children: [
                               Text(
-                                'Relative Name',
+                                'Book For',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

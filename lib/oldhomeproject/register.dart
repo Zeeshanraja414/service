@@ -51,6 +51,9 @@ class _SignupState extends State<Signup> {
       'UserType': UsertypeController.text,
       'City': CityController.text,
       'UserType': _value.toString(),
+      'Rating': 0.toString(),
+      'Gender': 'Male'.toString(),
+      'Cost': 0.toString(),
     });
     if (res.statusCode == 200) {
       print(res.body);
@@ -281,6 +284,22 @@ class _SignupState extends State<Signup> {
                     ),
                   ],
                 ),
+                // Visibility(
+                //   visible: _value == 'oldhome' ? true : false,
+                //   child: TextFormField(
+                //     decoration: const InputDecoration(
+                //       border: OutlineInputBorder(),
+                //       labelText: 'Cost',
+                //     ),
+                //     validator: (val) {
+                //       if (val!.isEmpty) {
+                //         return 'Required';
+                //       } else {
+                //         return null;
+                //       }
+                //     },
+                //   ),
+                // ),
                 Container(
                   height: 60,
                   width: 200,
@@ -306,6 +325,7 @@ class _SignupState extends State<Signup> {
                       });
                       if (_formkey.currentState!.validate()) {
                         sendData();
+                        showAlertDialog(context);
                         print('successfull');
                       } else {
                         print('unsuccessfull');
@@ -340,4 +360,31 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  Navigator.of(context).pop(true);
+  // set up the button
+  // TextButton(
+  //   child: Text("Ok"),
+  //   onPressed: () {
+  // Navigator.of(context).pop;
+  //   },
+  // );
+  // Future.delayed(Duration(seconds: 1), () {
+  //   Navigator.of(context).pop(true);
+  // });
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Registration Successful"),
+    //content: Text(""),
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

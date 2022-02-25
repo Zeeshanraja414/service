@@ -5,6 +5,7 @@ import 'package:old/oldhomeproject/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/url.dart';
 import 'package:old/oldhomeproject/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,20 +19,9 @@ class _State extends State<LoginPage> {
   TextEditingController PasswordController = TextEditingController();
   TextEditingController UserTypeController = TextEditingController();
   TextEditingController IdController = TextEditingController();
-  var i;
+  int i = 0;
   late Future<int> futurePost;
-  Future countRequest() async {
-    final response = await http.get(Uri.parse(
-        'http://${IpAdress.ip}/OldHome1/api/oldhome/Countnotification?id=${i}'));
-    if (response.statusCode == 200) {
-      count = jsonDecode(response.body) as int;
-    } else {
-      throw Exception('Failed');
-    }
-    return countRequest();
-  }
 
-  int count = 0;
   late String UserName, Password;
   late bool error, sending, success;
   late String msg;
@@ -42,8 +32,7 @@ class _State extends State<LoginPage> {
     error = false;
     sending = false;
     success = false;
-    //countRequest();
-    count = count;
+
     super.initState();
   }
 
@@ -55,7 +44,11 @@ class _State extends State<LoginPage> {
       'UserType': UserTypeController.text,
     });
     if (res.statusCode == 200) {
-      print(res.body);
+      WidgetsFlutterBinding.ensureInitialized();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool login = prefs.getBool('isLoggedIn') ?? false;
+      var email = prefs.getString(UserNameController.text);
+      var pass = prefs.getString(PasswordController.text);
       var data = json.decode(res.body);
       int id = data['Id'];
       i = data['Id'];
@@ -63,20 +56,19 @@ class _State extends State<LoginPage> {
       print(id);
       if (data['UserType'] == 'oldhome') {
         setState(() {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => Admin(
                         id: id,
                         idp: id,
                         ids: id,
-                        count: count,
                       )));
         });
       }
       if (data['UserType'] == 'user') {
         setState(() {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => User(
@@ -158,7 +150,6 @@ class _State extends State<LoginPage> {
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
                     onPressed: () {
-                      countRequest();
                       login();
                     },
                   )),

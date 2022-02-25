@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:old/oldhomeproject/Usersiteoldhomedetails.dart';
 import 'package:old/oldhomeproject/url.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Search {
   Search({
@@ -17,6 +18,7 @@ class Search {
     required this.TotalSeats,
     required this.VacantSeats,
     required this.Gender,
+    required this.Rating,
   });
   var Id;
   var UserName;
@@ -28,8 +30,10 @@ class Search {
   var TotalSeats;
   var VacantSeats;
   var Gender;
+  var Rating;
 
   factory Search.fromMap(Map<String, dynamic> json) => Search(
+        Rating: json["Rating"],
         Id: json["Id"],
         UserName: json["UserName"],
         FullName: json["FullName"],
@@ -174,51 +178,79 @@ class _OldHomeNameState extends State<OldHomeName> {
                           shrinkWrap: true,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                ListTile(
-                                  title: TextButton(
-                                    onPressed: () {
-                                      name = snapshot.data![index].FullName
-                                          .toString();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OldHomeDetails(
-                                                    oldhome: name,
-                                                    FullName: widget.Fullname,
-                                                    uid: widget.uid,
-                                                  )));
-                                    },
-                                    child: Text(
-                                      snapshot.data![index].FullName.toString(),
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ),
-                                  subtitle: Center(
-                                    child: Text(
-                                      snapshot.data![index].City.toString(),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          185, 8, 0, 0),
+                            return Container(
+                              margin: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  //color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.blue,
+                                    width: 4,
+                                  )),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: TextButton(
+                                      onPressed: () {
+                                        name = snapshot.data![index].FullName
+                                            .toString();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OldHomeDetails(
+                                                      oldhome: name,
+                                                      FullName: widget.Fullname,
+                                                      uid: widget.uid,
+                                                    )));
+                                      },
                                       child: Text(
-                                        snapshot.data![index].Gender.toString(),
+                                        snapshot.data![index].FullName
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                    subtitle: Center(
+                                      child: Text(
+                                        snapshot.data![index].City.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            185, 8, 0, 0),
+                                        child: Text(
+                                          snapshot.data![index].Gender
+                                              .toString(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            135, 12, 0, 0),
+                                        child: SmoothStarRating(
+                                          rating: snapshot.data![index].Rating,
+                                          starCount: 5,
+                                          isReadOnly: true,
+                                          size: 25,
+                                          spacing: 3,
+                                          allowHalfRating: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             );
                           });
                     } else if (snapshot.hasError) {

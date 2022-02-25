@@ -204,7 +204,7 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        'Add Relative Detail',
+                                        'Add Book For Other Detail',
                                         style: TextStyle(
                                           fontSize: 25,
                                         ),
@@ -215,7 +215,7 @@ class _PackagedetailUserState extends State<PackagedetailUser> {
                                           controller: RelativeName,
                                           decoration: const InputDecoration(
                                             border: OutlineInputBorder(),
-                                            labelText: 'Relative Name',
+                                            labelText: 'Book For',
                                           ),
                                           validator: (val) {
                                             if (val!.isEmpty) {

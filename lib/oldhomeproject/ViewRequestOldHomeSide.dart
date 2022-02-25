@@ -324,7 +324,10 @@ class _ViewRequestState extends State<ViewRequest> {
                                       decrement();
                                       setState(() {
                                         Accept();
-                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          snapshot.data!.removeAt(index);
+                                        });
+                                        //Navigator.of(context).pop();
                                         // Navigator.of(context).push(
                                         //     MaterialPageRoute(
                                         //         builder: (context) =>
@@ -347,10 +350,13 @@ class _ViewRequestState extends State<ViewRequest> {
                                       Reject();
                                       setState(() {
                                         //Navigator.of(context).pop();
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    super.widget));
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             super.widget));
+                                        setState(() {
+                                          snapshot.data!.removeAt(index);
+                                        });
                                       });
                                     },
                                     child: Text(
